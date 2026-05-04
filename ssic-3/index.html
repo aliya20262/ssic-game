@@ -5,7 +5,306 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smart Spendings — Investment Challenge</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script src="i18n.js"></script>
+<script>
+const LANGS = {
+  en: {
+    // NAV
+    brand: "Smart Spendings",
+    tagline: "Investment Challenge",
+    entry_sub: "Real-time multiplayer investment simulation for up to 40 players.\nManage portfolios through market crises. Learn finance by doing.",
+    host_btn: "Host Game",
+    host_desc: "Create room, control rounds, see all players",
+    join_btn: "Join Game",
+    join_desc: "Enter room code and play from your device",
+    entry_note: "Up to 40 players per room • No account needed • Real-time sync",
+    // HOST SETUP
+    host_setup_title: "Create a game room",
+    host_pass_label: "Host password",
+    host_pass_ph: "Only you will know this — to control the game",
+    rounds_label: "Number of rounds",
+    quick: "Quick", standard: "Standard", extended: "Extended",
+    diff_label: "Difficulty",
+    easy: "Easy", easy_sub: "60s per event",
+    medium: "Medium", medium_sub: "30s per event",
+    hard: "Hard", hard_sub: "15s per event",
+    create_room_btn: "Create Room",
+    // HOST DASH
+    host_dash_title: "Host Dashboard",
+    host_dash_sub: "Smart Spendings Investment Challenge",
+    room_code_label: "Room code — share with players",
+    game_url_label: "Game URL:",
+    players_title: "Players",
+    live: "Live",
+    start_game: "Start Game",
+    launch_event: "Launch Event",
+    next_round: "Next Round",
+    end_results: "End & Results",
+    progress: "Progress",
+    round: "Round",
+    done_round: "Done this round",
+    live_lb: "Live Leaderboard",
+    updates_rt: "updates in real time",
+    // PHASES
+    ph_lobby: "Lobby", ph_alloc: "Allocating", ph_event: "Playing — Event",
+    ph_result: "Round Complete", ph_final: "Game Over",
+    // JOIN
+    join_title: "Join Game",
+    join_sub: "Enter the 4-letter room code from the main screen",
+    code_label: "Room Code",
+    code_ph: "XXXX",
+    name_label: "Your name",
+    name_ph: "Enter your name",
+    join_room_btn: "Join Room",
+    back: "Back",
+    // LOBBY
+    youre_in: "You're in the room!",
+    waiting_host: "Waiting for host to start the game...",
+    players_in: "Players in room",
+    // GAME
+    allocate_title: "Allocate your portfolio",
+    allocated: "allocated",
+    auto_balance: "Auto-balance",
+    confirm_alloc: "Confirm allocation",
+    alloc_hint: "Allocate at least 90% before confirming. Unallocated funds earn no return.",
+    // EVENT
+    event_label: "Market event — make your move",
+    timer_hint: "Timer expires = Hold applied automatically",
+    sell: "Sell", sell_sub: "Cut risk",
+    hold: "Hold", hold_sub: "Stay the course",
+    buy: "Buy more", buy_sub: "Double down",
+    live_lb2: "Live leaderboard", all_players: "all players",
+    // RESULT
+    standings: "Standings after round",
+    wait_host: "Waiting for host to continue...",
+    all_rounds_done: "All rounds complete — waiting for final results...",
+    // FINAL
+    final_title: "Final Results",
+    full_lb: "Full Leaderboard", final_standings: "final standings",
+    all_journey: "All Players — Portfolio Journey",
+    insights_title: "Investor Insights",
+    home: "Home", print: "Print Results",
+    // ACTIONS comments
+    sell_pos: "Defensive move protected your capital.",
+    sell_neg: "Selling locked in losses.",
+    hold_pos: "Staying calm paid off.",
+    hold_neg: "Market moved against you.",
+    buy_pos: "Bold dip-buying generated gains.",
+    buy_neg: "Buying into downturn amplified losses.",
+    you: "you",
+    starting_capital: "Starting capital",
+    // PLAYER STATUSES
+    status_done: "Done", status_playing: "Playing...", status_ready: "Ready",
+    // INSIGHTS
+    ins_champion: "Champion",
+    ins_champion_d: "finished with $%val% (%ret%). Their allocation strategy consistently outperformed %n% other players.",
+    ins_avg: "Group average",
+    ins_avg_d: "Average portfolio: $%val% (%ret%). Players who diversified across all asset classes fared best during volatile events.",
+    ins_divers: "Diversification wins",
+    ins_divers_d: "Portfolios split across stocks, bonds, ETF and deposits survived market crises better than concentrated bets.",
+    ins_core: "Core investing principle",
+    ins_core_d: "Time in market beats timing the market. Diversify, minimize costs, stay invested through volatility.",
+    confirm_end: "End game and show final results?",
+    waiting_alloc: "Allocation confirmed — waiting for host...",
+  },
+ 
+  ru: {
+    brand: "Smart Spendings",
+    tagline: "Инвестиционный Челлендж",
+    entry_sub: "Мультиплеерная инвестиционная симуляция в реальном времени для 40 игроков.\nУправляй портфелем через рыночные кризисы. Учись финансам на практике.",
+    host_btn: "Создать игру",
+    host_desc: "Создай комнату, управляй раундами, видь всех игроков",
+    join_btn: "Войти в игру",
+    join_desc: "Введи код комнаты и играй со своего устройства",
+    entry_note: "До 40 игроков в комнате • Без регистрации • Синхронизация в реальном времени",
+    host_setup_title: "Создать игровую комнату",
+    host_pass_label: "Пароль хоста",
+    host_pass_ph: "Только ты будешь знать этот пароль — для управления игрой",
+    rounds_label: "Количество раундов",
+    quick: "Быстро", standard: "Стандарт", extended: "Расширен.",
+    diff_label: "Сложность",
+    easy: "Легко", easy_sub: "60с на событие",
+    medium: "Средне", medium_sub: "30с на событие",
+    hard: "Сложно", hard_sub: "15с на событие",
+    create_room_btn: "Создать комнату",
+    host_dash_title: "Панель хоста",
+    host_dash_sub: "Smart Spendings — Инвестиционный Челлендж",
+    room_code_label: "Код комнаты — поделись с игроками",
+    game_url_label: "Ссылка на игру:",
+    players_title: "Игроки",
+    live: "Прямой эфир",
+    start_game: "Начать игру",
+    launch_event: "Запустить событие",
+    next_round: "Следующий раунд",
+    end_results: "Завершить и результаты",
+    progress: "Прогресс",
+    round: "Раунд",
+    done_round: "Завершили этот раунд",
+    live_lb: "Таблица лидеров",
+    updates_rt: "обновляется в реальном времени",
+    ph_lobby: "Лобби", ph_alloc: "Аллокация", ph_event: "Идёт игра",
+    ph_result: "Раунд завершён", ph_final: "Игра окончена",
+    join_title: "Войти в игру",
+    join_sub: "Введи 4-буквенный код комнаты с главного экрана",
+    code_label: "Код комнаты",
+    code_ph: "XXXX",
+    name_label: "Твоё имя",
+    name_ph: "Введи своё имя",
+    join_room_btn: "Войти в комнату",
+    back: "Назад",
+    youre_in: "Ты в комнате!",
+    waiting_host: "Ожидаем начала игры от хоста...",
+    players_in: "Игроков в комнате",
+    allocate_title: "Распредели свой портфель",
+    allocated: "выделено",
+    auto_balance: "Авто-баланс",
+    confirm_alloc: "Подтвердить аллокацию",
+    alloc_hint: "Выдели не менее 90% перед подтверждением. Невыделенные средства не приносят дохода.",
+    event_label: "Рыночное событие — сделай свой ход",
+    timer_hint: "Таймер истёк = автоматически применяется Держать",
+    sell: "Продать", sell_sub: "Снизить риск",
+    hold: "Держать", hold_sub: "Оставаться на курсе",
+    buy: "Докупить", buy_sub: "Удвоить ставку",
+    live_lb2: "Таблица лидеров", all_players: "все игроки",
+    standings: "Позиции после раунда",
+    wait_host: "Ожидаем продолжения от хоста...",
+    all_rounds_done: "Все раунды завершены — ожидаем финальных результатов...",
+    final_title: "Финальные результаты",
+    full_lb: "Полная таблица", final_standings: "финальные позиции",
+    all_journey: "Все игроки — путь портфеля",
+    insights_title: "Советы инвестора",
+    home: "На главную", print: "Распечатать результаты",
+    sell_pos: "Защитный ход сохранил твой капитал.",
+    sell_neg: "Продажа зафиксировала убытки.",
+    hold_pos: "Спокойствие в волатильности окупилось.",
+    hold_neg: "Рынок пошёл против тебя.",
+    buy_pos: "Смелая покупка на спаде принесла прибыль.",
+    buy_neg: "Покупка во время падения усилила убытки.",
+    you: "ты",
+    starting_capital: "Стартовый капитал",
+    status_done: "Готово", status_playing: "Играет...", status_ready: "Готов",
+    ins_champion: "Чемпион",
+    ins_champion_d: "завершил с $%val% (%ret%). Стратегия аллокации стабильно обходила %n% других игроков.",
+    ins_avg: "Среднее по группе",
+    ins_avg_d: "Средний портфель: $%val% (%ret%). Диверсифицированные портфели показали лучшие результаты.",
+    ins_divers: "Диверсификация побеждает",
+    ins_divers_d: "Портфели, разделённые между акциями, облигациями, ETF и депозитами, лучше пережили кризисы.",
+    ins_core: "Главный принцип инвестирования",
+    ins_core_d: "Время на рынке важнее выбора момента. Диверсифицируй, минимизируй затраты, оставайся в рынке.",
+    confirm_end: "Завершить игру и показать результаты?",
+    waiting_alloc: "Аллокация подтверждена — ожидаем хоста...",
+  },
+ 
+  az: {
+    brand: "Smart Spendings",
+    tagline: "İnvestisiya Çəllenci",
+    entry_sub: "40 oyunçuya qədər real vaxt rejimli multiplayer investisiya simulyasiyası.\nBazar böhranları zamanı portfeli idarə et. Maliyyəni təcrübədə öyrən.",
+    host_btn: "Oyun Yarat",
+    host_desc: "Otaq yarat, raundları idarə et, bütün oyunçuları gör",
+    join_btn: "Oyuna Qoşul",
+    join_desc: "Otaq kodunu daxil et və cihazından oyna",
+    entry_note: "Otağa qədər 40 oyunçu • Qeydiyyat lazım deyil • Real vaxt sinxronizasiyası",
+    host_setup_title: "Oyun otağı yarat",
+    host_pass_label: "Host şifrəsi",
+    host_pass_ph: "Yalnız sən biləcəksən — oyunu idarə etmək üçün",
+    rounds_label: "Raund sayı",
+    quick: "Sürətli", standard: "Standart", extended: "Uzadılmış",
+    diff_label: "Çətinlik",
+    easy: "Asan", easy_sub: "Hadisə üçün 60s",
+    medium: "Orta", medium_sub: "Hadisə üçün 30s",
+    hard: "Çətin", hard_sub: "Hadisə üçün 15s",
+    create_room_btn: "Otaq Yarat",
+    host_dash_title: "Host Paneli",
+    host_dash_sub: "Smart Spendings — İnvestisiya Çəllenci",
+    room_code_label: "Otaq kodu — oyunçularla paylaş",
+    game_url_label: "Oyun linki:",
+    players_title: "Oyunçular",
+    live: "Canlı",
+    start_game: "Oyunu Başlat",
+    launch_event: "Hadisəni Başlat",
+    next_round: "Növbəti Raund",
+    end_results: "Bitir və Nəticələr",
+    progress: "İrəliləyiş",
+    round: "Raund",
+    done_round: "Bu raundu bitirdi",
+    live_lb: "Canlı Liderboard",
+    updates_rt: "real vaxtda yenilənir",
+    ph_lobby: "Lobbi", ph_alloc: "Bölüşdürmə", ph_event: "Oyun gedir",
+    ph_result: "Raund Bitdi", ph_final: "Oyun Bitdi",
+    join_title: "Oyuna Qoşul",
+    join_sub: "Əsas ekrandakı 4 hərfli otaq kodunu daxil et",
+    code_label: "Otaq Kodu",
+    code_ph: "XXXX",
+    name_label: "Adın",
+    name_ph: "Adını daxil et",
+    join_room_btn: "Otağa Qoşul",
+    back: "Geri",
+    youre_in: "Otaqdasın!",
+    waiting_host: "Hostun oyunu başlatmasını gözləyirik...",
+    players_in: "Otaqdakı oyunçular",
+    allocate_title: "Portfelini bölüşdür",
+    allocated: "bölüşdürüldü",
+    auto_balance: "Avtomatik balans",
+    confirm_alloc: "Bölüşdürməni təsdiqlə",
+    alloc_hint: "Təsdiqləmədən əvvəl ən azı 90% bölüşdür. Bölüşdürülməmiş vəsait gəlir gətirmir.",
+    event_label: "Bazar hadisəsi — hərəkətini et",
+    timer_hint: "Taymer bitdi = avtomatik Saxla tətbiq edilir",
+    sell: "Sat", sell_sub: "Riski azalt",
+    hold: "Saxla", hold_sub: "Kursda qal",
+    buy: "Əlavə Al", buy_sub: "İkiqat artır",
+    live_lb2: "Canlı liderboard", all_players: "bütün oyunçular",
+    standings: "Raunddan sonra mövqelər",
+    wait_host: "Hostun davam etməsini gözləyirik...",
+    all_rounds_done: "Bütün raundlar bitdi — yekun nəticələri gözləyirik...",
+    final_title: "Yekun Nəticələr",
+    full_lb: "Tam Liderboard", final_standings: "yekun mövqelər",
+    all_journey: "Bütün Oyunçular — Portfel Yolu",
+    insights_title: "İnvestor Məsləhətləri",
+    home: "Ana Səhifə", print: "Nəticələri Çap Et",
+    sell_pos: "Müdafiə hərəkəti kapitalını qorudu.",
+    sell_neg: "Satış zərərləri sabitləşdirdi.",
+    hold_pos: "Volatillikdə sakit qalmaq işə yaradı.",
+    hold_neg: "Bazar sənə qarşı getdi.",
+    buy_pos: "Cəsarətli alış mənfəət gətirdi.",
+    buy_neg: "Düşüş zamanı alış zərərləri artırdı.",
+    you: "sən",
+    starting_capital: "Başlanğıc kapital",
+    status_done: "Bitdi", status_playing: "Oynayır...", status_ready: "Hazır",
+    ins_champion: "Çempion",
+    ins_champion_d: "$%val% (%ret%) ilə bitirdi. Bölüşdürmə strategiyası %n% digər oyunçunu ardıcıl ötdü.",
+    ins_avg: "Qrup ortalaması",
+    ins_avg_d: "Orta portfel: $%val% (%ret%). Müxtəlif aktivlər arasında diversifikasiya edən oyunçular ən yaxşı nəticə göstərdi.",
+    ins_divers: "Diversifikasiya qalib gəlir",
+    ins_divers_d: "Səhmlər, istiqrazlar, ETF və depozitlər arasında bölünmüş portfellər böhranları daha yaxşı dəf etdi.",
+    ins_core: "Əsas investisiya prinsipi",
+    ins_core_d: "Bazarda vaxt keçirmək, bazarı zamanlamaqdan daha vacibdir. Diversifikasiya et, xərcləri azalt, volatillik zamanı investisiyada qal.",
+    confirm_end: "Oyunu bitirmək və yekun nəticələri göstərmək istəyirsən?",
+    waiting_alloc: "Bölüşdürmə təsdiqləndi — host gözlənilir...",
+  }
+};
+ 
+let currentLang = localStorage.getItem('ssic_lang') || 'en';
+function t(key) { return (LANGS[currentLang] || LANGS.en)[key] || key; }
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('ssic_lang', lang);
+  applyLang();
+}
+function applyLang() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const attr = el.getAttribute('data-i18n-attr');
+    if (attr) el.setAttribute(attr, t(key));
+    else el.textContent = t(key);
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    el.placeholder = t(el.getAttribute('data-i18n-ph'));
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === currentLang);
+  });
+}
+ 
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--blue:#2563eb;--blue-d:#1d4ed8;--blue-l:#eff6ff;--blue-b:#bfdbfe;--green:#059669;--green-l:#f0fdf4;--green-b:#86efac;--red:#dc2626;--red-l:#fef2f2;--red-b:#fca5a5;--amber:#d97706;--amber-l:#fffbeb;--amber-b:#fcd34d;--gray:#6b7280;--gray-l:#f9fafb;--gray-b:#e5e7eb;--text:#111827;--text2:#374151;--text3:#6b7280;--bg:#f0f2f5;--card:#ffffff;--r:14px;--r-sm:10px;--r-xs:8px}
@@ -99,6 +398,305 @@ input:focus{border-color:var(--blue)}input[type=range]{width:100%;accent-color:v
 .pop{animation:popA .4s ease}@keyframes popA{0%{transform:scale(1)}45%{transform:scale(1.05)}100%{transform:scale(1)}}
 .shake{animation:shk .35s ease}@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(5px)}}
 @media(max-width:600px){.grid2,.grid3,.action-grid{grid-template-columns:1fr}.asset-grid{grid-template-columns:1fr}.wait-code{font-size:36px;letter-spacing:6px}.lang-bar{top:8px;right:8px}}
+</style>
+</head>
+<body>
+ 
+<div class="lang-bar">
+  <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" data-lang="ru" onclick="setLang('ru')">RU</button>
+  <button class="lang-btn" data-lang="az" onclick="setLang('az')">AZ</button>
+</div>
+<div class="notif" id="notif"></div>
+ 
+<!-- ENTRY -->
+<div id="p-entry" class="page active">
+  <div class="wrap" style="padding-top:60px">
+    <div class="tc mb24">
+      <div class="brand mb8" data-i18n="brand"></div>
+      <h1 style="font-size:34px;font-weight:900;margin-bottom:10px" data-i18n="tagline"></h1>
+      <p class="sub mb24" id="entry-sub"></p>
+    </div>
+    <div class="grid2 mb24" style="max-width:440px;margin-left:auto;margin-right:auto">
+      <div class="card tc" style="cursor:pointer;border:2px solid var(--blue-b);padding:24px" onclick="go('p-host-setup')">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="display:block;margin:0 auto 12px"><rect x="4" y="6" width="32" height="22" rx="5" stroke="#2563eb" stroke-width="2"/><path d="M14 34h12M20 28v6" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/></svg>
+        <div style="font-size:16px;font-weight:800;color:var(--blue);margin-bottom:6px" data-i18n="host_btn"></div>
+        <div class="sub" style="font-size:13px" data-i18n="host_desc"></div>
+      </div>
+      <div class="card tc" style="cursor:pointer;border:2px solid var(--green-b);padding:24px" onclick="go('p-join')">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="display:block;margin:0 auto 12px"><circle cx="20" cy="15" r="7" stroke="#059669" stroke-width="2"/><path d="M7 34c0-7.2 5.8-13 13-13s13 5.8 13 13" stroke="#059669" stroke-width="2" stroke-linecap="round"/></svg>
+        <div style="font-size:16px;font-weight:800;color:var(--green);margin-bottom:6px" data-i18n="join_btn"></div>
+        <div class="sub" style="font-size:13px" data-i18n="join_desc"></div>
+      </div>
+    </div>
+    <p class="tc sub" style="font-size:12px" data-i18n="entry_note"></p>
+  </div>
+</div>
+ 
+<!-- HOST SETUP -->
+<div id="p-host-setup" class="page">
+  <div class="wrap">
+    <div class="flex mb16" style="margin-top:8px"><button class="btn btn-outline btn-sm" onclick="go('p-entry')" data-i18n="back"></button></div>
+    <div class="card mb16">
+      <h2 class="mb16" data-i18n="host_setup_title"></h2>
+      <div class="mb16"><div class="label mb8" data-i18n="host_pass_label"></div><input type="password" id="host-pass" data-i18n-ph="host_pass_ph"></div>
+      <div class="mb16">
+        <div class="label mb8" data-i18n="rounds_label"></div>
+        <div class="grid3" id="rounds-sel">
+          <div class="card-sm tc" data-v="4" onclick="selRound(this)" style="cursor:pointer;border:2px solid var(--gray-b)"><div style="font-size:22px;font-weight:800">4</div><div class="sub" style="font-size:12px" data-i18n="quick"></div></div>
+          <div class="card-sm tc sel-active" data-v="6" onclick="selRound(this)" style="cursor:pointer;border:2px solid var(--blue);background:var(--blue-l)"><div style="font-size:22px;font-weight:800;color:var(--blue)">6</div><div style="font-size:12px;color:var(--blue)" data-i18n="standard"></div></div>
+          <div class="card-sm tc" data-v="8" onclick="selRound(this)" style="cursor:pointer;border:2px solid var(--gray-b)"><div style="font-size:22px;font-weight:800">8</div><div class="sub" style="font-size:12px" data-i18n="extended"></div></div>
+        </div>
+      </div>
+      <div class="mb16">
+        <div class="label mb8" data-i18n="diff_label"></div>
+        <div class="grid3" id="diff-sel">
+          <div class="card-sm tc" data-v="easy" onclick="selDiff(this)" style="cursor:pointer;border:2px solid var(--gray-b)"><div style="font-size:14px;font-weight:700" data-i18n="easy"></div><div class="sub" style="font-size:11px" data-i18n="easy_sub"></div></div>
+          <div class="card-sm tc sel-active" data-v="medium" onclick="selDiff(this)" style="cursor:pointer;border:2px solid var(--blue);background:var(--blue-l)"><div style="font-size:14px;font-weight:700;color:var(--blue)" data-i18n="medium"></div><div style="font-size:11px;color:var(--blue)" data-i18n="medium_sub"></div></div>
+          <div class="card-sm tc" data-v="hard" onclick="selDiff(this)" style="cursor:pointer;border:2px solid var(--gray-b)"><div style="font-size:14px;font-weight:700" data-i18n="hard"></div><div class="sub" style="font-size:11px" data-i18n="hard_sub"></div></div>
+        </div>
+      </div>
+      <button class="btn btn-blue btn-lg" style="width:100%" onclick="createRoom()" data-i18n="create_room_btn"></button>
+    </div>
+  </div>
+</div>
+ 
+<!-- HOST DASHBOARD -->
+<div id="p-host" class="page">
+  <div class="wide">
+    <div class="dash-hdr mb16">
+      <div class="flex-between" style="flex-wrap:wrap;gap:12px">
+        <div><div class="dash-title" data-i18n="host_dash_title"></div><div style="font-size:14px;opacity:.8;margin-bottom:10px" data-i18n="host_dash_sub"></div><div id="host-phase" class="phase-pill ph-lobby"></div></div>
+        <div><div style="font-size:12px;opacity:.7;margin-bottom:4px" data-i18n="room_code_label"></div><div class="room-code-pill" id="h-code">????</div><div style="font-size:12px;opacity:.7;margin-top:6px" data-i18n="game_url_label"></div><div style="font-size:12px;background:rgba(255,255,255,.12);border-radius:6px;padding:5px 10px;margin-top:4px;word-break:break-all" id="h-url">—</div></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 260px;gap:16px;margin-bottom:16px">
+      <div>
+        <div class="flex-between mb12"><h3><span data-i18n="players_title"></span> (<span id="h-pcount">0</span>/40)</h3><div class="flex" style="gap:6px;font-size:13px;color:var(--text3)"><div class="pulse"></div><span data-i18n="live"></span></div></div>
+        <div class="player-grid" id="h-pgrid"></div>
+      </div>
+      <div>
+        <div class="card mb12">
+          <div class="label mb12">Controls</div>
+          <button class="btn btn-green btn-block" id="h-start-btn" onclick="hostStart()" data-i18n="start_game"></button>
+          <button class="btn btn-blue btn-block btn-sm" id="h-event-btn" onclick="hostStartEvent()" disabled data-i18n="launch_event"></button>
+          <button class="btn btn-amber btn-block btn-sm" id="h-next-btn" onclick="hostNext()" disabled data-i18n="next_round"></button>
+          <button class="btn btn-red btn-block btn-sm" id="h-end-btn" onclick="hostEnd()" data-i18n="end_results"></button>
+        </div>
+        <div class="card">
+          <div class="label mb8" data-i18n="progress"></div>
+          <div class="flex-between mb8"><span class="sub" data-i18n="round"></span><span style="font-weight:800" id="h-round-lbl">0/0</span></div>
+          <div class="prog-track mb12"><div class="prog-fill" id="h-prog" style="width:0%;background:var(--blue)"></div></div>
+          <div class="flex-between"><span class="sub" data-i18n="done_round"></span><span style="font-weight:800" id="h-done-lbl">0/0</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="lb mb16"><div class="lb-head"><span data-i18n="live_lb"></span><span style="font-weight:400;font-size:12px" data-i18n="updates_rt"></span></div><div class="lb-scroll" id="h-lb"></div></div>
+  </div>
+</div>
+ 
+<!-- JOIN -->
+<div id="p-join" class="page">
+  <div class="wrap" style="max-width:400px;padding-top:48px">
+    <div class="tc mb24"><div class="brand mb8" data-i18n="brand"></div><h2 class="mb8" data-i18n="join_title"></h2><p class="sub" data-i18n="join_sub"></p></div>
+    <div class="card">
+      <div class="mb12"><div class="label mb8" data-i18n="code_label"></div><input type="text" id="j-code" maxlength="4" style="text-align:center;font-size:28px;font-weight:900;letter-spacing:6px;text-transform:uppercase" oninput="this.value=this.value.toUpperCase()" data-i18n-ph="code_ph"></div>
+      <div class="mb16"><div class="label mb8" data-i18n="name_label"></div><input type="text" id="j-name" maxlength="20" data-i18n-ph="name_ph"></div>
+      <button class="btn btn-green btn-lg" style="width:100%;margin-bottom:10px" onclick="joinRoom()" data-i18n="join_room_btn"></button>
+      <button class="btn btn-outline btn-sm" style="width:100%" onclick="go('p-entry')" data-i18n="back"></button>
+      <div id="j-err" style="color:var(--red);font-size:13px;margin-top:10px;display:none"></div>
+    </div>
+  </div>
+</div>
+ 
+<!-- LOBBY -->
+<div id="p-lobby" class="page">
+  <div class="wrap"><div class="wait-wrap">
+    <div class="brand mb8" data-i18n="brand"></div>
+    <h2 class="mb8" data-i18n="youre_in"></h2>
+    <p class="sub mb16" data-i18n="waiting_host"></p>
+    <div class="wait-code" id="l-code">????</div>
+    <div class="spinner"></div>
+    <p class="sub mt16">Room <strong id="l-code2">?</strong> &bull; <strong id="l-name">—</strong></p>
+    <div class="card" style="margin-top:24px;text-align:left">
+      <div class="label mb8"><span data-i18n="players_in"></span> (<span id="l-pcount">0</span>)</div>
+      <div id="l-plist" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </div>
+  </div></div>
+</div>
+ 
+<!-- PLAYER GAME -->
+<div id="p-game" class="page">
+  <div class="wrap">
+    <div class="topbar mb16">
+      <div><div class="label" id="g-round-lbl">Round 1 of 6</div><div class="tb-val" id="g-val">$10,000</div><div style="font-size:13px;margin-top:2px" id="g-chg"></div></div>
+      <div class="flex" style="gap:12px"><div style="text-align:right"><div class="label" data-i18n="name_label"></div><div style="font-size:15px;font-weight:700" id="g-pname">—</div></div><div class="av av-md" id="g-av"></div></div>
+    </div>
+    <div class="card-sm flex-between mb16"><div class="label" data-i18n="progress"></div><div class="prog-track" style="flex:1;margin:0 12px"><div class="prog-fill" id="g-prog" style="width:0%;background:var(--blue)"></div></div><div style="font-size:13px;font-weight:800;color:var(--blue)" id="g-prog-lbl">1/6</div></div>
+ 
+    <div id="g-alloc">
+      <div class="flex-between mb12"><h3 data-i18n="allocate_title"></h3><div><span style="font-size:22px;font-weight:800" id="g-apct">0%</span> <span class="sub" data-i18n="allocated"></span></div></div>
+      <div class="asset-grid" id="g-agrid"></div>
+      <div class="flex mb12" style="gap:10px"><button class="btn btn-outline" style="flex:1" onclick="gAutoBalance()" data-i18n="auto_balance"></button><button class="btn btn-blue" style="flex:2" id="g-confirm" onclick="gConfirm()" data-i18n="confirm_alloc"></button></div>
+      <div class="card-sm sub mb16" data-i18n="alloc_hint"></div>
+    </div>
+ 
+    <div id="g-event" style="display:none">
+      <div class="flex-between mb16">
+        <div class="timer"><svg width="60" height="60" viewBox="0 0 60 60"><circle class="t-bg" cx="30" cy="30" r="23"/><circle class="t-fg" id="g-tfg" cx="30" cy="30" r="23"/></svg><div class="t-lbl" id="g-ttxt">30</div></div>
+        <div style="flex:1;margin-left:14px"><div class="label mb4" data-i18n="event_label"></div><div class="sub" data-i18n="timer_hint"></div></div>
+      </div>
+      <div id="g-ev-banner"></div>
+      <div class="action-grid">
+        <div class="act sell" id="g-sell" onclick="gAction('sell')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:block;margin:0 auto"><path d="M5 7l7 11 7-11" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="act-lbl" data-i18n="sell"></div><div class="act-sub" data-i18n="sell_sub"></div></div>
+        <div class="act hold" id="g-hold" onclick="gAction('hold')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:block;margin:0 auto"><rect x="7" y="5" width="4" height="14" rx="2" fill="#d97706"/><rect x="13" y="5" width="4" height="14" rx="2" fill="#d97706"/></svg><div class="act-lbl" data-i18n="hold"></div><div class="act-sub" data-i18n="hold_sub"></div></div>
+        <div class="act buy" id="g-buy" onclick="gAction('buy')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:block;margin:0 auto"><path d="M5 17l7-11 7 11" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="act-lbl" data-i18n="buy"></div><div class="act-sub" data-i18n="buy_sub"></div></div>
+      </div>
+      <div class="lb mb16"><div class="lb-head"><span data-i18n="live_lb2"></span><span style="font-weight:400" data-i18n="all_players"></span></div><div id="g-ev-lb"></div></div>
+    </div>
+ 
+    <div id="g-result" style="display:none">
+      <div id="g-res-hero" class="anim"></div>
+      <div class="lb mb16"><div class="lb-head"><span data-i18n="standings"></span> <span id="g-res-r">1</span></div><div id="g-res-lb"></div></div>
+      <div class="card-sm tc" style="padding:20px"><div class="spinner" style="margin-bottom:12px"></div><p class="sub" id="g-wait-msg" data-i18n="wait_host"></p></div>
+    </div>
+  </div>
+</div>
+ 
+<!-- FINAL -->
+<div id="p-final" class="page">
+  <div class="wrap">
+    <div class="card tc mb16" style="padding:32px;background:linear-gradient(135deg,#1e3a8a,#2563eb)">
+      <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:8px" data-i18n="brand"></div>
+      <div style="font-size:30px;font-weight:900;color:#fff;margin-bottom:4px" data-i18n="final_title"></div>
+      <div style="font-size:14px;color:rgba(255,255,255,.7)" id="f-sub">—</div>
+    </div>
+    <div class="card mb16"><div class="podium" id="f-podium"></div></div>
+    <div class="lb mb16"><div class="lb-head"><span data-i18n="full_lb"></span><span style="font-weight:400" data-i18n="final_standings"></span></div><div class="lb-scroll" id="f-lb"></div></div>
+    <div class="chart-card mb16"><div class="chart-lbl" data-i18n="all_journey"></div><div style="position:relative;height:240px"><canvas id="f-chart">Chart.</canvas></div></div>
+    <div class="card mb16"><h3 class="mb16" data-i18n="insights_title"></h3><div id="f-insights"></div></div>
+    <div style="display:flex;gap:10px;margin-bottom:40px"><button class="btn btn-outline" style="flex:1" onclick="go('p-entry')" data-i18n="home"></button><button class="btn btn-blue" style="flex:2" onclick="window.print()" data-i18n="print"></button></div>
+  </div>
+</div>
+ 
+<script>
+const API=window.location.origin,WS_BASE=API.replace('http','ws');
+let hostState={code:null,password:null,totalRounds:6,diff:'medium'};
+let playerState={pid:null,code:null,name:null,color:null,capital:10000,history:[10000],alloc:{stocks:0,bonds:0,etf:0,deposit:0,cash:0},acted:false};
+let hostWS=null,playerWS=null,gTimer=null,finalChartInst=null;
+ 
+const ASSETS_DATA={
+  en:[{id:'stocks',name:'Stocks',risk:'High',bc:'badge-red',rr:'+8-45% / -35%',desc:'Global equities'},{id:'bonds',name:'Bonds',risk:'Low',bc:'badge-green',rr:'+2-8% / -5%',desc:'Government & corporate debt'},{id:'etf',name:'ETFs',risk:'Med',bc:'badge-amber',rr:'+5-25% / -18%',desc:'Diversified index funds'},{id:'deposit',name:'Deposits',risk:'Low',bc:'badge-green',rr:'+2-6% stable',desc:'Fixed-term bank accounts'},{id:'cash',name:'Cash',risk:'None',bc:'badge-gray',rr:'0-1%',desc:'Liquidity reserve'}],
+  ru:[{id:'stocks',name:'Акции',risk:'Высок.',bc:'badge-red',rr:'+8-45% / -35%',desc:'Глобальные акции'},{id:'bonds',name:'Облигации',risk:'Низк.',bc:'badge-green',rr:'+2-8% / -5%',desc:'Гос. и корп. долг'},{id:'etf',name:'ETF',risk:'Средн.',bc:'badge-amber',rr:'+5-25% / -18%',desc:'Индексные фонды'},{id:'deposit',name:'Депозиты',risk:'Низк.',bc:'badge-green',rr:'+2-6% стаб.',desc:'Банковские вклады'},{id:'cash',name:'Наличные',risk:'Нет',bc:'badge-gray',rr:'0-1%',desc:'Резерв ликвидности'}],
+  az:[{id:'stocks',name:'Səhmlər',risk:'Yüksək',bc:'badge-red',rr:'+8-45% / -35%',desc:'Qlobal səhmlər'},{id:'bonds',name:'İstiqrazlar',risk:'Aşağı',bc:'badge-green',rr:'+2-8% / -5%',desc:'Dövlət borcu'},{id:'etf',name:'ETF',risk:'Orta',bc:'badge-amber',rr:'+5-25% / -18%',desc:'İndeks fondları'},{id:'deposit',name:'Depozitlər',risk:'Aşağı',bc:'badge-green',rr:'+2-6% sabit',desc:'Bank hesabları'},{id:'cash',name:'Nağd',risk:'Yox',bc:'badge-gray',rr:'0-1%',desc:'Likvidlik ehtiyatı'}]
+};
+ 
+function getAssets(){return ASSETS_DATA[currentLang]||ASSETS_DATA.en;}
+function go(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function f(n){return Math.round(n).toLocaleString();}
+function pct(v){return(v>=0?'+':'')+parseFloat(v).toFixed(1)+'%';}
+function initials(n){return n.trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'?';}
+function $(id){return document.getElementById(id);}
+function notify(msg,dur=2500){const n=$('notif');n.textContent=msg;n.classList.add('show');setTimeout(()=>n.classList.remove('show'),dur);}
+async function api(path,body){const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json();if(!r.ok)throw new Error(d.detail||'Error');return d;}
+ 
+function setLang(lang){currentLang=lang;localStorage.setItem('ssic_lang',lang);applyLang();updateDynamicTexts();if($('g-agrid')&&$('g-agrid').children.length>0)renderAllocGrid();}
+function updateDynamicTexts(){const el=$('entry-sub');if(el)el.innerHTML=t('entry_sub').replace('\n','<br>');}
+ 
+function selRound(el){document.querySelectorAll('#rounds-sel .card-sm').forEach(e=>{e.style.border='2px solid var(--gray-b)';e.style.background='';e.querySelectorAll('div').forEach(d=>d.style.color='');});el.style.border='2px solid var(--blue)';el.style.background='var(--blue-l)';el.querySelectorAll('div').forEach(d=>d.style.color='var(--blue)');hostState.totalRounds=parseInt(el.dataset.v);}
+function selDiff(el){document.querySelectorAll('#diff-sel .card-sm').forEach(e=>{e.style.border='2px solid var(--gray-b)';e.style.background='';e.querySelectorAll('div').forEach(d=>d.style.color='');});el.style.border='2px solid var(--blue)';el.style.background='var(--blue-l)';el.querySelectorAll('div').forEach(d=>d.style.color='var(--blue)');hostState.diff=el.dataset.v;}
+hostState.totalRounds=6;hostState.diff='medium';
+ 
+async function createRoom(){const pass=$('host-pass').value.trim();if(!pass){notify(t('host_pass_label'));return;}hostState.password=pass;try{const d=await api('/api/create-room',{password:pass,total_rounds:hostState.totalRounds,diff:hostState.diff});hostState.code=d.code;$('h-code').textContent=d.code;$('h-url').textContent=window.location.origin+'?join='+d.code;go('p-host');connectHostWS(d.code);}catch(e){notify('Error: '+e.message);}}
+function connectHostWS(code){if(hostWS)hostWS.close();hostWS=new WebSocket(WS_BASE+'/ws-host/'+code);hostWS.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==='state')renderHost(d.data);};hostWS.onclose=()=>setTimeout(()=>connectHostWS(code),2000);}
+ 
+function renderHost(state){
+  const players=Object.values(state.players||{});
+  $('h-pcount').textContent=players.length;$('h-round-lbl').textContent=state.round+'/'+state.total_rounds;
+  $('h-prog').style.width=(state.round/state.total_rounds*100)+'%';
+  const done=players.filter(p=>p.round_done).length;$('h-done-lbl').textContent=done+'/'+players.length;
+  const pm={lobby:t('ph_lobby'),alloc:t('ph_alloc'),event:t('ph_event'),result:t('ph_result'),final:t('ph_final')};
+  const pc={lobby:'ph-lobby',alloc:'ph-alloc',event:'ph-event',result:'ph-result',final:'ph-final'};
+  const ph=$('host-phase');ph.textContent=pm[state.phase]||state.phase;ph.className='phase-pill '+(pc[state.phase]||'ph-lobby');
+  $('h-start-btn').disabled=state.phase!=='lobby';$('h-event-btn').disabled=state.phase!=='alloc';$('h-next-btn').disabled=state.phase!=='result';$('h-end-btn').disabled=state.phase==='final';
+  $('h-pgrid').innerHTML=players.sort((a,b)=>b.capital-a.capital).map(p=>{const cls=p.round_done?'done':state.phase==='event'?'playing':'joined';const st=p.round_done?t('status_done'):state.phase==='event'?t('status_playing'):t('status_ready');const chg=p.capital-10000;return`<div class="ptile ${cls}"><div class="av av-sm" style="background:${p.color}">${p.initials}</div><div class="pt-name">${p.name}</div><div class="pt-status">${st}</div><div class="pt-val ${chg>=0?'up':'dn'}">$${f(p.capital)}</div></div>`;}).join('');
+  renderLB('h-lb',players,'');
+  if(state.phase==='final')showFinal(state);
+}
+ 
+async function hostAction(a){try{await api('/api/host-action',{code:hostState.code,password:hostState.password,action:a});}catch(e){notify('Error: '+e.message);}}
+function hostStart(){hostAction('start');}function hostStartEvent(){hostAction('start_event');}function hostNext(){hostAction('next_round');}function hostEnd(){if(confirm(t('confirm_end')))hostAction('end');}
+ 
+async function joinRoom(){const code=$('j-code').value.trim().toUpperCase(),name=$('j-name').value.trim(),err=$('j-err');err.style.display='none';if(!code||code.length!==4){err.textContent='Enter 4-letter code';err.style.display='block';return;}if(!name){err.textContent='Enter your name';err.style.display='block';return;}try{const d=await api('/api/join-room',{code,name});playerState={...playerState,pid:d.pid,code,name:d.name,color:d.color,capital:10000,history:[10000],acted:false};$('l-code').textContent=code;$('l-code2').textContent=code;$('l-name').textContent=name;go('p-lobby');connectPlayerWS(code,d.pid);}catch(e){err.textContent=e.message;err.style.display='block';}}
+function connectPlayerWS(code,pid){if(playerWS)playerWS.close();playerWS=new WebSocket(WS_BASE+'/ws/'+code+'/'+pid);playerWS.onmessage=e=>{const d=JSON.parse(e.data);if(d.type==='state')handlePlayerState(d.data);};playerWS.onclose=()=>setTimeout(()=>connectPlayerWS(code,pid),2000);}
+ 
+let lastPhase='lobby';
+function handlePlayerState(state){
+  const players=Object.values(state.players||{});const me=state.players[playerState.pid];
+  if(me){playerState.capital=me.capital;playerState.history=me.history||[10000];}
+  $('l-pcount').textContent=players.length;
+  $('l-plist').innerHTML=players.map(p=>`<div class="flex" style="background:var(--green-l);border-radius:8px;padding:6px 10px;gap:8px"><div class="av av-sm" style="background:${p.color}">${p.initials}</div><span style="font-size:13px;font-weight:600">${p.name}</span></div>`).join('');
+  if(state.phase==='final'){clearInterval(gTimer);showFinal(state);return;}
+  if(state.phase!==lastPhase){lastPhase=state.phase;if(state.phase==='alloc')startAllocPhase(state);else if(state.phase==='event')startEventPhase(state);else if(state.phase==='result')showRoundResult(state);}
+  renderLB('g-ev-lb',players,playerState.pid);renderLB('g-res-lb',players,playerState.pid);
+}
+ 
+function startAllocPhase(state){
+  go('p-game');$('g-alloc').style.display='block';$('g-event').style.display='none';$('g-result').style.display='none';
+  $('g-round-lbl').textContent=t('round')+' '+state.round+' / '+state.total_rounds;
+  $('g-val').textContent='$'+f(playerState.capital);
+  const d=playerState.capital-10000;const chg=$('g-chg');
+  chg.textContent=d===0?t('starting_capital'):(d>=0?'+':'')+' $'+f(Math.abs(d))+' ('+(d/10000*100).toFixed(1)+'%)';
+  chg.className=d>0?'up':d<0?'dn':'gray';
+  $('g-prog').style.width=((state.round-1)/state.total_rounds*100)+'%';$('g-prog-lbl').textContent=state.round+'/'+state.total_rounds;
+  $('g-pname').textContent=playerState.name;$('g-av').style.background=playerState.color;$('g-av').textContent=initials(playerState.name);
+  playerState.alloc={stocks:0,bonds:0,etf:0,deposit:0,cash:0};playerState.acted=false;
+  $('g-confirm').textContent=t('confirm_alloc');$('g-confirm').disabled=false;
+  renderAllocGrid();
+}
+ 
+function renderAllocGrid(){
+  const g=$('g-agrid');if(!g)return;g.innerHTML='';
+  getAssets().forEach(a=>{const p=playerState.alloc[a.id]||0,amt=Math.round(playerState.capital*p/100),div=document.createElement('div');div.className='acard'+(p>0?' sel':'');div.id='ga-'+a.id;div.innerHTML=`<div class="acard-head"><span class="acard-name">${a.name}</span><span class="badge ${a.bc}">${a.risk}</span></div><div class="acard-amt" id="gamt-${a.id}">$${f(amt)}</div><div class="acard-rr" id="grr-${a.id}">${p}% &bull; ${a.rr}</div><input type="range" min="0" max="100" step="5" value="${p}" style="width:100%;accent-color:var(--blue);margin:6px 0 4px" oninput="gSlide('${a.id}',this.value)"><div class="acard-desc">${a.desc}</div>`;g.appendChild(div);});
+  updAllocPct();
+}
+function gSlide(id,v){v=parseInt(v);playerState.alloc[id]=v;const tot=gTot();if(tot>100){playerState.alloc[id]=v-(tot-100);v=playerState.alloc[id];document.querySelector('#ga-'+id+' input').value=v;}$('gamt-'+id).textContent='$'+f(Math.round(playerState.capital*v/100));$('grr-'+id).textContent=v+' \u2022 '+getAssets().find(a=>a.id===id).rr;$('ga-'+id).className='acard'+(v>0?' sel':'');updAllocPct();}
+function gTot(){return Object.values(playerState.alloc).reduce((a,b)=>a+b,0);}
+function updAllocPct(){$('g-apct').textContent=gTot()+'%';}
+function gAutoBalance(){playerState.alloc={stocks:30,bonds:20,etf:25,deposit:15,cash:10};renderAllocGrid();}
+async function gConfirm(){if(gTot()<90){const b=$('g-confirm');b.classList.add('shake');setTimeout(()=>b.classList.remove('shake'),400);return;}try{await api('/api/player-action',{code:playerState.code,pid:playerState.pid,action:'set_alloc',alloc:playerState.alloc});$('g-confirm').textContent=t('waiting_alloc');$('g-confirm').disabled=true;notify('✓');}catch(e){notify('Error: '+e.message);}}
+ 
+function startEventPhase(state){
+  $('g-alloc').style.display='none';$('g-event').style.display='block';$('g-result').style.display='none';
+  playerState.acted=false;const ev=state.current_event;if(!ev)return;playerState.currentEvent=ev;
+  $('g-ev-banner').innerHTML=`<div class="ev-card" style="background:${ev.col};border-color:${ev.brd}"><div class="ev-type" style="color:${ev.tc}">${ev.type}</div><div class="ev-title">${ev.title}</div><div class="ev-desc">${ev.desc}</div><div class="ev-pills">${(ev.pills||[]).map(p=>`<span class="badge ${p.c}" style="padding:4px 12px">${p.t}</span>`).join('')}</div></div>`;
+  ['sell','hold','buy'].forEach(a=>{const el=$('g-'+a);el.className='act '+a;el.onclick=()=>gAction(a);el.disabled=false;});
+  const times={easy:60,medium:30,hard:15};startGTimer(times[state.diff]||30);
+}
+function startGTimer(sec){clearInterval(gTimer);let t2=sec;const fg=$('g-tfg'),txt=$('g-ttxt'),C=145,total=sec;function tick(){txt.textContent=t2;fg.style.strokeDashoffset=C*(1-t2/total);fg.style.stroke=t2<=5?'#dc2626':t2<=Math.ceil(total*.3)?'#d97706':'#2563eb';if(t2<=0){clearInterval(gTimer);if(!playerState.acted)gAction('hold');return;}t2--;}tick();gTimer=setInterval(tick,1000);}
+async function gAction(action){if(playerState.acted)return;playerState.acted=true;clearInterval(gTimer);['sell','hold','buy'].forEach(a=>{const el=$('g-'+a);el.className='act '+a+(a===action?' chosen-'+action:'');el.onclick=null;el.disabled=true;});try{const d=await api('/api/player-action',{code:playerState.code,pid:playerState.pid,action});playerState.capital=d.capital;}catch(e){notify('Error: '+e.message);}}
+ 
+function showRoundResult(state){
+  $('g-alloc').style.display='none';$('g-event').style.display='none';$('g-result').style.display='block';$('g-res-r').textContent=state.round;
+  const me=state.players[playerState.pid];
+  if(me){const hist=me.history||[10000],prev=hist.length>=2?hist[hist.length-2]:10000,delta=me.capital-prev,pos=delta>=0,dec=(me.decisions||[]).slice(-1)[0],action=dec?dec.action:'hold';
+    const cm={sell:{true:t('sell_pos'),false:t('sell_neg')},hold:{true:t('hold_pos'),false:t('hold_neg')},buy:{true:t('buy_pos'),false:t('buy_neg')}};
+    $('g-res-hero').innerHTML=`<div class="result-hero ${pos?'rh-pos':'rh-neg'} pop"><div class="rh-delta ${pos?'up':'dn'}">${pos?'+':'-'}$${f(Math.abs(delta))}</div><div class="rh-ttl">${me.name} — ${t(action)}</div><div class="rh-sub">${(cm[action]||cm.hold)[pos.toString()]}</div></div>`;
+    $('g-val').textContent='$'+f(me.capital);}
+  $('g-wait-msg').textContent=state.round>=state.total_rounds?t('all_rounds_done'):t('wait_host');
+}
+ 
+function renderLB(id,players,myPid){const sorted=[...players].sort((a,b)=>b.capital-a.capital),maxV=sorted[0]?.capital||10000,el=$(id);if(!el)return;el.innerHTML=sorted.map((p,i)=>{const chg=p.capital-10000,isMe=p.name===playerState.name,bar=`<div style="flex:1;height:5px;background:#f3f4f6;border-radius:3px;overflow:hidden"><div style="height:100%;width:${Math.round(p.capital/maxV*100)}%;background:${p.color||'#2563eb'};border-radius:3px;transition:width .5s"></div></div>`;return`<div class="lb-row${isMe?' me':''}"><div class="rank ${i===0?'r1':i===1?'r2':i===2?'r3':''}">${i+1}</div><div class="av av-sm" style="background:${p.color||'#2563eb'}">${p.initials||'?'}</div><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}${isMe?' ('+t('you')+')':''}</div>${bar}</div><div style="text-align:right;min-width:84px"><div style="font-weight:800;font-size:14px">$${f(p.capital)}</div><div style="font-size:11px;color:${chg>=0?'var(--green)':'var(--red)'}">${pct((chg/10000)*100)}</div></div></div>`;}).join('');}
+ 
+function showFinal(state){go('p-final');const players=Object.values(state.players||{}).sort((a,b)=>b.capital-a.capital);$('f-sub').textContent=players.length+' players \u2022 '+state.total_rounds+' rounds';renderPodium(players);renderLB('f-lb',players,'');renderFinalChart(players);renderInsights(players);}
+function renderPodium(sorted){const top=sorted.slice(0,3),order=top.length>=3?[top[1],top[0],top[2]]:top,heights=[100,130,78],sizes=[54,72,46],bCls=['pod2','pod1','pod3'],medals=['2','1','3'];$('f-podium').innerHTML=order.filter(Boolean).map((p,i)=>{const ret=(p.capital-10000)/10000*100;return`<div class="pod-col"><div class="av" style="background:${p.color};width:${sizes[i]}px;height:${sizes[i]}px;font-size:${Math.round(sizes[i]/3)}px">${p.initials}</div><div class="pod-name">${p.name}</div><div class="pod-val ${ret>=0?'up':'dn'}">$${f(p.capital)}</div><div class="pod-ret">${pct(ret)}</div><div class="pod-block ${bCls[i]}" style="width:88px;height:${heights[i]}px">${medals[i]}</div></div>`;}).join('');}
+function renderFinalChart(players){if(finalChartInst)finalChartInst.destroy();const maxLen=Math.max(...players.map(p=>(p.history||[10000]).length)),labels=Array.from({length:maxLen},(_,i)=>i===0?'Start':'R'+i);finalChartInst=new Chart($('f-chart'),{type:'line',data:{labels,datasets:players.slice(0,20).map(p=>({label:p.name,data:p.history||[10000],borderColor:p.color||'#2563eb',backgroundColor:'transparent',borderWidth:2,pointRadius:3,pointBackgroundColor:p.color||'#2563eb',tension:.35}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:10,font:{size:11}}}},scales:{y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'k',font:{size:11}},grid:{color:'#f3f4f6'}},x:{grid:{display:false},ticks:{font:{size:11}}}}}}); }
+function renderInsights(players){const winner=players[0],avg=players.reduce((s,p)=>s+p.capital,0)/players.length,items=[{c:'#f59e0b',t:t('ins_champion')+': '+winner.name,d:t('ins_champion_d').replace('%val%',f(winner.capital)).replace('%ret%',pct((winner.capital-10000)/100)).replace('%n%',players.length-1)},{c:'#2563eb',t:t('ins_avg'),d:t('ins_avg_d').replace('%val%',f(avg)).replace('%ret%',pct((avg-10000)/100))},{c:'#059669',t:t('ins_divers'),d:t('ins_divers_d')},{c:'#7c3aed',t:t('ins_core'),d:t('ins_core_d')}];$('f-insights').innerHTML=items.map(it=>`<div style="display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f3f4f6"><div style="width:8px;height:8px;border-radius:50%;background:${it.c};flex-shrink:0;margin-top:5px"></div><div><div style="font-size:13px;font-weight:700;margin-bottom:3px">${it.t}</div><div style="font-size:12px;color:#6b7280;line-height:1.55">${it.d}</div></div></div>`).join('');}
+ 
+(function(){const p=new URLSearchParams(window.location.search),code=p.get('join');if(code){$('j-code').value=code.toUpperCase();go('p-join');}updateDynamicTexts();applyLang();})();
+</script>
+</body>
+</html>
 </style>
 </head>
 <body>
