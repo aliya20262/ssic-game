@@ -449,7 +449,20 @@ az:{brand:"Smart Spendings",tagline:"İnvestisiya Çəllenci",entry_sub:"100 oyu
 
 let currentLang=localStorage.getItem('ssic_lang')||'en';
 function t(k){return(LANGS[currentLang]||LANGS.en)[k]||k;}
-function setLang(lang){currentLang=lang;localStorage.setItem('ssic_lang',lang);applyLang();updateDyn();if(document.getElementById('g-agrid')&&document.getElementById('g-agrid').children.length>0)renderAllocGrid();}
+function setLang(lang){
+  currentLang=lang;localStorage.setItem('ssic_lang',lang);applyLang();updateDyn();
+  if(document.getElementById('g-agrid')&&document.getElementById('g-agrid').children.length>0)renderAllocGrid();
+  if(playerState.currentEvent){
+    const ev=playerState.currentEvent;
+    const L=currentLang;
+    const evType=ev.type&&ev.type[L]?ev.type[L]:(ev.type&&ev.type.en?ev.type.en:ev.type||'');
+    const evTitle=ev.title&&ev.title[L]?ev.title[L]:(ev.title&&ev.title.en?ev.title.en:ev.title||'');
+    const evDesc=ev.desc&&ev.desc[L]?ev.desc[L]:(ev.desc&&ev.desc.en?ev.desc.en:ev.desc||'');
+    const evPills=ev.pills&&ev.pills[L]?ev.pills[L]:(ev.pills&&ev.pills.en?ev.pills.en:ev.pills||[]);
+    const banner=document.getElementById('g-ev-banner');
+    if(banner&&banner.innerHTML)banner.innerHTML='<div class="ev-card" style="background:'+ev.col+';border-color:'+ev.brd+'"><div class="ev-type" style="color:'+ev.tc+'">'+evType+'</div><div class="ev-title">'+evTitle+'</div><div class="ev-desc">'+evDesc+'</div><div class="ev-pills">'+evPills.map(function(p){return'<span class="badge '+p.c+'" style="padding:4px 12px">'+p.t+'</span>';}).join('')+'</div></div>';
+  }
+}
 function applyLang(){document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(el.tagName==='INPUT')el.placeholder=t(k);else el.textContent=t(k);});document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=t(el.getAttribute('data-i18n-ph'));});document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===currentLang));}
 function updateDyn(){const el=document.getElementById('entry-sub');if(el)el.innerHTML=t('entry_sub').replace('\n','<br>');}
 
